@@ -1,0 +1,20 @@
+{
+  "name": "koen12344/deployment-info-for-fs",
+  "description": "Increase customer trust by displaying info about your most recent plugin update",
+  "type": "project",
+  "license": "GNU General Public License",
+  "autoload": {
+    "psr-4": {
+      "Koen12344\\DeploymentInfoForFs\\": "src/php/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Koen Reus",
+      "email": "koen@koenreus.com"
+    }
+  ],
+  "require": {
+    "ext-json": "*"
+  }
+}
