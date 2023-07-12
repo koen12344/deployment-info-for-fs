@@ -1,11 +1,8 @@
 name: Build plugin
 on:
   push:
-    if: startsWith(github.ref, 'refs/tags/v')
-    branches:
-      - main
-      - beta
-      - pending
+    tags:
+      - 'v*'
 jobs:
   create-release:
     runs-on: ubuntu-latest
