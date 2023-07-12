@@ -51,7 +51,7 @@ jobs:
         uses: montudor/action-zip@v1
 
       - name: Zip output
-        run: zip -qq -r ./deployment-info-for-fs.zip .
+        run: zip -qq -r ../deployment-info-for-fs.zip .
         working-directory: ./build-plugin
 
       - name: Create Release
@@ -60,8 +60,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
+          tag_name: ${GITHUB_REF_NAME#v}
+          release_name: Release ${GITHUB_REF_NAME#v}
           draft: false
           prerelease: false
 
