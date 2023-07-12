@@ -40,7 +40,6 @@ jobs:
       - name: Composer install
         working-directory: ./build-plugin
         run: |
-          mkdir vendor-prefixed
           composer install --no-dev --classmap-authoritative --prefer-dist
           composer dump-autoload -a --ignore-platform-reqs
 
@@ -51,7 +50,7 @@ jobs:
       - name: Zip plugin
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r deployment-info-for-fs.zip build-plugin
+          args: zip -qq -r deployment-info-for-fs.zip build-plugin/*
 
       - name: Create Release
         id: create_release
