@@ -1,0 +1,80 @@
+name: Build plugin
+on:
+  push:
+    if: startsWith(github.ref, 'refs/tags/v')
+    branches:
+      - main
+      - beta
+      - pending
+jobs:
+  create-release:
+
+    runs-on: ubuntu-latest
+    env:
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Write release version
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          echo Version: $VERSION
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Set up WP-CLI
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x wp-cli.phar
+          mv wp-cli.phar /usr/local/bin/wp
+
+      - name: Create build directory
+        run: rsync -av --exclude='.git' --exclude-from='.gitignore' . build-plugin
+
+      - name: Generate POT file
+        run: |
+          wp i18n make-pot ./ languages/deployment-info-for-fs.pot
+
+      - name: Composer install
+        working-directory: ./build-plugin
+        run: |
+          mkdir vendor-prefixed
+          composer install --no-dev --classmap-authoritative --prefer-dist
+          composer dump-autoload -a --ignore-platform-reqs
+
+      - name: Delete distignored files
+        working-directory: ./build-plugin
+        run: grep -v "^#" .distignore | xargs rm -rf
+
+      - name: Zip plugin
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r deployment-info-for-fs.zip build-plugin
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          draft: false
+          prerelease: false
+
+      # This step uploads an asset, under the release created in the above step
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./deployment-info-for-fs.zip
+          asset_name: deployment-info-for-fs.zip
+          asset_content_type: application/zip

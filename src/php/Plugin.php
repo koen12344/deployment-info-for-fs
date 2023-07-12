@@ -93,7 +93,7 @@ class Plugin
 		$rest_key = get_option('difs_rest_key');
 		?>
 		<div class="wrap">
-			<?php esc_html_e('Please set up a new webhook in your Freemius dashboard for each plugin you want to show updates on, with the "plugin.version.released" event on the following URL:'); ?><br /><br />
+			<?php esc_html_e('Please set up a new webhook in your Freemius dashboard for each plugin you want to show updates on, with the "plugin.version.released" event on the following URL:', 'deployment-info-for-fs'); ?><br /><br />
 			<input type="text" readonly value="<?php echo esc_url(rest_url("difs/v1/plugin_update/?key={$rest_key}")); ?>" style="width:800px;" />
 			<form action="options.php" method="post">
 				<?php
@@ -279,7 +279,7 @@ class Plugin
 
 		$cached = get_transient('difs_plugin_'.$plugin_id);
 
-		if($cached || !$refresh){
+		if($cached && !$refresh){
 			return $cached;
 		}
 
@@ -287,7 +287,7 @@ class Plugin
 			'fields' => 'created,installs_count,title'
 		]);
 
-		$plugin_data = $this->get_sdk()->Api("/plugins/1828.json?{$query}");
+		$plugin_data = $this->get_sdk()->Api("/plugins/{$plugin_id}.json?{$query}");
 
 		if(empty($plugin_data->error)){
 			set_transient('difs_plugin_'.$plugin_id, $plugin_data);
@@ -372,6 +372,7 @@ class Plugin
 				"@type" => "SoftwareApplication",
 				"name" => $plugin_info->title,
 				"softwareVersion" => $most_recent_release->version,
+				"applicationCategory" => "BrowserApplication",
 				"operatingSystem" => "WordPress",
 				"datePublished" => $plugin_info->created,
 				"dateModified" => $most_recent_release->created,
