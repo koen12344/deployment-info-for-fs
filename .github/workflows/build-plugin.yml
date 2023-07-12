@@ -8,10 +8,7 @@ on:
       - pending
 jobs:
   create-release:
-
     runs-on: ubuntu-latest
-    env:
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
