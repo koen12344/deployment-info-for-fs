@@ -51,7 +51,7 @@ jobs:
         uses: montudor/action-zip@v1
 
       - name: Zip output
-        run: zip -qq -r deployment-info-for-fs.zip .
+        run: zip -qq -r ./deployment-info-for-fs.zip .
         working-directory: ./build-plugin
 
       - name: Create Release
