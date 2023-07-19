@@ -28,28 +28,28 @@ jobs:
           mv wp-cli.phar /usr/local/bin/wp
 
       - name: Create build directory
-        run: rsync -av --exclude='.git' --exclude-from='.gitignore' . build-plugin
+        run: rsync -av --exclude='.git' --exclude-from='.gitignore' . deployment-info-for-fs
 
       - name: Generate POT file
+        working-directory: ./deployment-info-for-fs
         run: |
-          wp i18n make-pot ./ languages/deployment-info-for-fs.pot
+          wp i18n make-pot . languages/deployment-info-for-fs.pot
 
       - name: Composer install
-        working-directory: ./build-plugin
+        working-directory: ./deployment-info-for-fs
         run: |
           composer install --no-dev --classmap-authoritative --prefer-dist
           composer dump-autoload -a --ignore-platform-reqs
 
       - name: Delete distignored files
-        working-directory: ./build-plugin
+        working-directory: ./deployment-info-for-fs
         run: grep -v "^#" .distignore | xargs rm -rf
 
       - name: Zip plugin
         uses: montudor/action-zip@v1
 
       - name: Zip output
-        run: zip -qq -r deployment-info-for-fs.zip .
-        working-directory: ./build-plugin
+        run: zip -qq -r deployment-info-for-fs.zip deployment-info-for-fs
 
       - name: Create Release
         id: create_release
@@ -70,6 +70,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./build-plugin/deployment-info-for-fs.zip
+          asset_path: ./deployment-info-for-fs.zip
           asset_name: deployment-info-for-fs.zip
           asset_content_type: application/zip

@@ -1,5 +1,5 @@
 # Deployment info for Freemius #
-**Contributors:** (koen12344)  
+**Contributors:** koen12344  
 **Donate link:** https://tycoonmedia.net  
 **Tags:** freemius, deployment, plugin, info  
 **Requires at least:** 4.5  
@@ -13,107 +13,71 @@ Increase customer confidence by displaying info about your most recent plugin up
 
 ## Description ##
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+Increase customer confidence by showing your plugin is being actively maintained. With **Deployment info for Freemius**
+you can display info about your latest [Freemius](https://freemius.com) plugin release on your website.
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+![sample](assets/sample.png)
 
-A few notes about the sections above:
+**Deployment info for Freemius** adds the `[difs_plugin_info]` shortcode that can be used anywhere on your
+website, and will display the latest version, release date, WordPress version and amount of installs of your Freemius
+powered plugin.
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+[Demo](https://tycoonmedia.net/)
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+### Features ###
+* Easy to style with built-in CSS classes
+* Automatically updated by Freemius webhooks
+* Generates schema.org JSON-LD structured data of the SoftwareApplication type (can be turned off)
+* Plugin data is cached for maximum performance
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+Feel free to fork to suit your needs, or make pull requests, making sure base functionality is maintained without having
+to make changes to the shortcode.
+
+*Inspired by [Iconic](https://iconicwp.com).*
 
 ## Installation ##
 
-This section describes how to install the plugin and get it working.
+Here's how to install and use **Deployment info for Freemius**.
 
-e.g.
+1. Download [the latest release](https://github.com/koen12344/deployment-info-for-fs/releases/latest)
+1. Upload the content of the .zip file to your wp-content/plugins folder or upload the zip file through your WordPress
+dashboard.
+1. Activate the plugin
+1. Navigate to Settings > Deployment info for FS
+1. Enter your Freemius details (can be found on the [My Profile](https://dashboard.freemius.com/#!/profile/) page)
+1. Copy the webhook URL and add a new webhook to each plugin that you want to use with the plugin in your
+[Freemius dashboard](https://dashboard.freemius.com) (Integrations > Custom Webhooks).
+1. Select only the `plugin.version.released` event
+1. Add the `[difs_plugin_info plugin_id="12345"]` shortcode wherever you want to display the release info. Obviously
+replace the 12345 with your Freemius plugin ID.
 
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+### Shortcode Attributes ###
+
+The shortcode supports the following attributes:
+
+* `plugin_id` - *required* - The ID of your Freemius plugin (found in Settings > Keys)
+* `show_installs` - Whether or not to show the amount of installs. Set to `1` or `0`, default `1`
+* `structured_data` - Whether or not the plugin should generate JSON-LD structured data. Set to `1` or `0`, default `1`
+
+With all attributes: `[difs_plugin_info plugin_id="12345" show_installs="1" structured_data="1"]`
+
+### CSS Classes ###
+
+**Deployment info for Freemius** comes without any CSS but can be styled through the built-in CSS classes:
+
+* `difs-container` - Parent container
+* `difs-divider` - The divider between the different attributes ( | )
+* `difs-item` - Each item is encapsulated by this class, and individual classes (`difs-lastupdate`, `difs-released`,
+`difs-wordpress`, `difs-installs`)
 
 ## Frequently Asked Questions ##
 
-### A question that someone might have ###
+### Can I turn the amount of installs off? ###
 
-An answer to that question.
-
-### What about foo bar? ###
-
-Answer to foo bar dilemma.
-
-## Screenshots ##
-
-### 1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from ###
-![This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from](http://ps.w.org/deployment-info-for-freemius/assets/screenshot-1.png)
-
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-### 2. This is the second screen shot ###
-![This is the second screen shot](http://ps.w.org/deployment-info-for-freemius/assets/screenshot-2.png)
-
+If your plugin has a low amount of installs that may not actually work in your favor. You can choose not to display them
+by adding the `show_installs="0"` attribute to the shortcode.
 
 ## Changelog ##
 
-### 1.0 ###
-* A change since the previous version.
-* Another change.
-
-### 0.5 ###
-* List versions from most recent at top to oldest at bottom.
-
-## Upgrade Notice ##
-
-### 1.0 ###
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-### 0.5 ###
-This version fixes a security related bug.  Upgrade immediately.
-
-## Arbitrary section ##
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-## A brief Markdown Example ##
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](https://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: https://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+### 0.1.0 ###
+* Initial release
